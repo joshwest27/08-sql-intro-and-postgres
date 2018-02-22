@@ -50,7 +50,7 @@ app.get('/articles', (request, response) => {
 
 app.post('/articles', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // Query is 3, then is 4 and .send is 5 and this is a create in CRUD. 
+  // Query is 3, then is 4 and .send is 5 and this is a create in CRUD. This is the data set. Mathching the properties of our constructor. 
   client.query(
     `INSERT INTO
     articles(title, author, "authorUrl", category, "publishedOn", body)
@@ -75,9 +75,21 @@ app.post('/articles', (request, response) => {
 
 app.put('/articles/:id', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // This is a CRUD update. query is 3, .then is 4. .send is 5. 
+  // This is a CRUD update. query is 3, .then is 4. .send is 5. This is updating one of our articles with new information. It's deleting once and putting in new info. 
   client.query(
-    ` `, []
+    `UPDATE
+    articles SET(title, author, "authorUrl", category, "publishedOn", body)
+    VALUES ($1, $2, $3, $4, $5, $6) WHERE article_id=$1;`
+    ,
+    [
+      request.params.id,
+      request.body.title,
+      request.body.author,
+      request.body.authorUrl,
+      request.body.category,
+      request.body.publishedOn,
+      request.body.body
+    ]
   )
     .then(() => {
       response.send('update complete')
@@ -89,9 +101,9 @@ app.put('/articles/:id', (request, response) => {
 
 app.delete('/articles/:id', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // This is a CRUD delete. query is 3, then is 4 and send is 5. 
+  // This is a CRUD delete. query is 3, then is 4 and send is 5. This is deleting everything from specific id
   client.query(
-    `DELETE FROM articles WHERE article_id=$1;`,
+    `DELETE * FROM articles WHERE articles/:id`,
     [request.params.id]
   )
     .then(() => {
@@ -104,9 +116,9 @@ app.delete('/articles/:id', (request, response) => {
 
 app.delete('/articles', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // This is a CRUD delete. query is 3, then is 4 and send is 5. 
+  // This is a CRUD delete. query is 3, then is 4 and send is 5. This is deleting everything from the table. 
   client.query(
-    ''
+    'DELETE * FROM articles;'
   )
     .then(() => {
       response.send('Delete complete')

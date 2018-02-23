@@ -79,7 +79,7 @@ app.put('/articles/:id', (request, response) => {
   client.query(
     `UPDATE
     articles SET(title, author, "authorUrl", category, "publishedOn", body)
-    VALUES ($1, $2, $3, $4, $5, $6) WHERE article_id=$1;`
+    VALUES ($2, $3, $4, $5, $6, $7) WHERE article_id=$1;`
     ,
     [
       request.params.id,
@@ -116,9 +116,9 @@ app.delete('/articles/:id', (request, response) => {
 
 app.delete('/articles', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // This is a CRUD delete. query is 3, then is 4 and send is 5. This is deleting everything from the table. 
+  // This is a CRUD delete. query is 3, .then is 4 and .send is 5. This is deleting everything from the table. and is called in Article.truncateTable
   client.query(
-    'DELETE * FROM articles;'
+    'DELETE FROM articles;'
   )
     .then(() => {
       response.send('Delete complete')
